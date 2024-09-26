@@ -1,8 +1,17 @@
-from . import api_blueprint
-@api_blueprint.route('/hello', methods=['GET'])
-def hello():
-    return {'message': 'Hello, World!'}
+from flask import request, jsonify
 
-@api_blueprint.route('/myworkouts', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def show_workouts():
-    return {'message': "Here you can see and update workouts"}
+from data_access.data_access import insert_workout, get_all_workouts
+from . import api_blueprint
+
+@api_blueprint.route('/workouts', methods=['GET'])
+def get_all_workouts():
+    return get_all_workouts()
+
+@api_blueprint.route('/workouts', methods=['POST'])
+def add_workout():
+    data = request.get_json()
+    insert_workout(data)
+    return jsonify({'message': 'Workout added successfully!', 'data': data}), 201
+
+
+
